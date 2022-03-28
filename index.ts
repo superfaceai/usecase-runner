@@ -22,23 +22,7 @@ import { parseMap, parseProfile, Source } from '@superfaceai/parser';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 
-async function loadUsecase() {
-  return {
-    profile: await readFile(join(__dirname, 'usecases', 'current-city.supr'), {
-      encoding: 'utf8',
-    }),
-    map: await readFile(join(__dirname, 'usecases', 'wttr-in.suma'), {
-      encoding: 'utf8',
-    }),
-    provider: await readFile(join(__dirname, 'usecases', 'wttr-in.json'), {
-      encoding: 'utf8',
-    }),
-    env: await readFile(join(__dirname, 'usecases', 'wttr-in.env'), {
-      encoding: 'utf8',
-    }),
-  };
-}
-
+// TODO: replace with exposed implementatoin, once refactored https://github.com/superfaceai/one-sdk-js/pull/225
 export function resolveSecurityConfiguration(
   schemes: SecurityScheme[],
   values: SecurityValues[],
@@ -158,12 +142,18 @@ async function perform({
   return await boundProvider.perform(usecase, input, parameters);
 }
 
-async function main() {
-  const usecase = await loadUsecase();
+export type RunOpts = {
+  usecase: string;
+  profile: Source;
+  map: Source;
+  provider: ProviderJson;
+  env?: string;
+};
 
-  const profileAst = await parseProfile(new Source(usecase.profile));
-  const mapAst = await parseMap(new Source(usecase.map));
-  const provider = JSON.parse(usecase.provider);
+export async function run({ usecase, profile, map, provider, env }: RunOpts) {
+  // Parse profile and map sources,
+  const profileAst = await parseProfile(profile);
+  const mapAst = await parseMap(map);
 
   // TODO: create security from env file
   const security = [];
@@ -171,19 +161,46 @@ async function main() {
   // TODO: gather integration prameters from env file
   const parameters = {};
 
+  const input = { city: 'Prague, Czechia', units: 'C' };
+
   try {
     const result = await perform({
       profileAst,
       mapAst,
       provider,
       usecase: 'GetCurrentWeatherInCity',
-      input: { city: 'Prague, Czechia', units: 'C' },
+      input,
     });
 
     console.log(result.unwrap());
   } catch (e) {
     console.error('ERR', e);
   }
+}
+
+async function main() {
+  const usecase = {
+    profile: new Source(
+      await readFile(join(__dirname, 'usecases', 'current-city.supr'), {
+        encoding: 'utf8',
+      })
+    ),
+    map: new Source(
+      await readFile(join(__dirname, 'usecases', 'wttr-in.suma'), {
+        encoding: 'utf8',
+      })
+    ),
+    provider: JSON.parse(
+      await readFile(join(__dirname, 'usecases', 'wttr-in.json'), {
+        encoding: 'utf8',
+      })
+    ),
+    env: await readFile(join(__dirname, 'usecases', 'wttr-in.env'), {
+      encoding: 'utf8',
+    }),
+  };
+
+  await run({ ...usecase, usecase: 'GetCurrentWeatherInCity' });
 }
 
 main();
