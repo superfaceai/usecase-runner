@@ -18,7 +18,6 @@ yarn start
 
 ## ToDo
 
-- [ ] security
-  - pass values to perform
-  - build security somehow
+- [ ] use `resolveSecurityValues` from https://github.com/superfaceai/one-sdk-js/pull/225
 - [ ] ENV variables
+  - [ ]
