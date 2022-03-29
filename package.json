@@ -1,10 +1,19 @@
 {
   "name": "@superfaceai/usecase-runner",
-  "version": "1.0.0",
-  "main": "src/index.ts",
+  "version": "0.0.0",
+  "description": "Perform use-cases directly from files without full Superface Lifecycle",
+  "repository": "https://github.com/superfaceai/usecase-runner",
+  "author": "Superface Team <hello@superface.ai>",
   "license": "MIT",
+  "main": "dist/index.js",
+  "source": "src/index.ts",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
-    "build": "tsc --outDir dist"
+    "build": "tsc -p tsconfig.build.json --outDir dist",
+    "build:watch": "yarn build --watch"
   },
   "dependencies": {
     "@superfaceai/ast": "^1.1.0",
