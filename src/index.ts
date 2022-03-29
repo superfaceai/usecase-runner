@@ -14,10 +14,10 @@ import {
 } from '@superfaceai/one-sdk';
 import { NonPrimitive } from '@superfaceai/one-sdk/dist/internal/interpreter/variables';
 import { ServiceSelector } from '@superfaceai/one-sdk/dist/lib/services';
-import { parseMap, parseProfile, Source } from '@superfaceai/parser';
 import createDebug from 'debug';
 import { DEBUG_PREFIX } from './constants';
 import { parseEnv, resolveEnvRecord } from './env';
+import { parseMap, parseProfile, parseProvider } from './parse';
 import { resolveSecurityConfiguration } from './security';
 
 const debug = createDebug(`${DEBUG_PREFIX}:index`);
@@ -80,9 +80,9 @@ export async function perform({
   env,
 }: PerformOpts) {
   // Parse profile and map sources,
-  const profileAst = await parseProfile(new Source(profile)); // TODO: Wrap to error to properly report
-  const mapAst = await parseMap(new Source(map)); // TODO: Wrap to error to properly report
-  const providerJson: ProviderJson = JSON.parse(provider); // TODO: Wrap to error to properly report and validate provider against schema
+  const profileAst = await parseProfile(profile); // TODO: Wrap to error to properly report
+  const mapAst = await parseMap(map); // TODO: Wrap to error to properly report
+  const providerJson = await parseProvider(provider); // TODO: Wrap to error to properly report and validate provider against schema
 
   const security = prepareSecurityValues(
     providerJson.name,
