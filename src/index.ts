@@ -17,6 +17,10 @@ import { ServiceSelector } from '@superfaceai/one-sdk/dist/lib/services';
 import { parseMap, parseProfile, Source } from '@superfaceai/parser';
 import { parseEnv, resolveEnvRecord } from './env';
 import { resolveSecurityConfiguration } from './security';
+import createDebug from 'debug';
+import { DEBUG_PREFIX } from './constants';
+
+const debug = createDebug(`${DEBUG_PREFIX}:index`);
 
 async function performUseCase<
   TInput extends NonPrimitive | undefined = undefined,
@@ -89,17 +93,14 @@ export async function perform({
     providerJson.parameters ?? [],
   );
 
-  console.log('security', security);
-  console.log('parameters', parameters);
-
   const config = parseEnv(env ?? '');
 
   const resolvedSecurity =
     security.map((entry) => resolveEnvRecord(config, entry)) ?? [];
   const resolvedParameter = resolveEnvRecord(config, parameters);
 
-  console.log('resolvedSecurity', resolvedSecurity);
-  console.log('resolvedParameter', resolvedParameter);
+  debug('resolvedSecurity', resolvedSecurity);
+  debug('resolvedParameter', resolvedParameter);
 
   return await performUseCase({
     profileAst,
