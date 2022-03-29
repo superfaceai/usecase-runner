@@ -80,9 +80,9 @@ export async function perform({
   env,
 }: PerformOpts) {
   // Parse profile and map sources,
-  const profileAst = await parseProfile(new Source(profile));
-  const mapAst = await parseMap(new Source(map));
-  const providerJson: ProviderJson = JSON.parse(provider);
+  const profileAst = await parseProfile(new Source(profile)); // TODO: Wrap to error to properly report
+  const mapAst = await parseMap(new Source(map)); // TODO: Wrap to error to properly report
+  const providerJson: ProviderJson = JSON.parse(provider); // TODO: Wrap to error to properly report and validate provider against schema
 
   const security = prepareSecurityValues(
     providerJson.name,
@@ -94,7 +94,6 @@ export async function perform({
   );
 
   const config = parseEnv(env ?? '');
-
   const resolvedSecurity =
     security.map((entry) => resolveEnvRecord(config, entry)) ?? [];
   const resolvedParameter = resolveEnvRecord(config, parameters);
