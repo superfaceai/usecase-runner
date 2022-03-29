@@ -5,22 +5,22 @@ import {
   ProfileDocumentNode,
   ProviderJson,
   SecurityValues,
-} from "@superfaceai/ast";
+} from '@superfaceai/ast';
 import {
   BoundProfileProvider,
   MapInterpreterError,
   ProfileParameterError,
   Result,
-} from "@superfaceai/one-sdk";
-import { NonPrimitive } from "@superfaceai/one-sdk/dist/internal/interpreter/variables";
-import { ServiceSelector } from "@superfaceai/one-sdk/dist/lib/services";
-import { parseMap, parseProfile, Source } from "@superfaceai/parser";
-import { parseEnv, resolveEnvRecord } from "./env";
-import { resolveSecurityConfiguration } from "./security";
+} from '@superfaceai/one-sdk';
+import { NonPrimitive } from '@superfaceai/one-sdk/dist/internal/interpreter/variables';
+import { ServiceSelector } from '@superfaceai/one-sdk/dist/lib/services';
+import { parseMap, parseProfile, Source } from '@superfaceai/parser';
+import { parseEnv, resolveEnvRecord } from './env';
+import { resolveSecurityConfiguration } from './security';
 
 async function performUseCase<
   TInput extends NonPrimitive | undefined = undefined,
-  TResult = any
+  TResult = any,
 >({
   profileAst,
   mapAst,
@@ -45,14 +45,14 @@ async function performUseCase<
     {
       services: new ServiceSelector(
         providerJson.services,
-        providerJson.defaultService
+        providerJson.defaultService,
       ),
       security: resolveSecurityConfiguration(
         providerJson.securitySchemes ?? [],
         security ?? [],
-        providerJson.name
+        providerJson.name,
       ),
-    }
+    },
   );
 
   return await boundProvider.perform(usecase, input, parameters);
@@ -82,24 +82,24 @@ export async function perform({
 
   const security = prepareSecurityValues(
     providerJson.name,
-    providerJson.securitySchemes ?? []
+    providerJson.securitySchemes ?? [],
   );
   const parameters = prepareProviderParameters(
     providerJson.name,
-    providerJson.parameters ?? []
+    providerJson.parameters ?? [],
   );
 
-  console.log("security", security);
-  console.log("parameters", parameters);
+  console.log('security', security);
+  console.log('parameters', parameters);
 
-  const config = parseEnv(env ?? "");
+  const config = parseEnv(env ?? '');
 
   const resolvedSecurity =
     security.map((entry) => resolveEnvRecord(config, entry)) ?? [];
   const resolvedParameter = resolveEnvRecord(config, parameters);
 
-  console.log("resolvedSecurity", resolvedSecurity);
-  console.log("resolvedParameter", resolvedParameter);
+  console.log('resolvedSecurity', resolvedSecurity);
+  console.log('resolvedParameter', resolvedParameter);
 
   return await performUseCase({
     profileAst,

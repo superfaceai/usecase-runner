@@ -7,18 +7,18 @@ import {
   SecurityScheme,
   SecurityType,
   SecurityValues,
-} from "@superfaceai/ast";
+} from '@superfaceai/ast';
 import {
   invalidSecurityValuesError,
   securityNotFoundError,
-} from "@superfaceai/one-sdk/dist/internal/errors.helpers";
-import { SecurityConfiguration } from "@superfaceai/one-sdk/dist/internal/interpreter/http";
+} from '@superfaceai/one-sdk/dist/internal/errors.helpers';
+import { SecurityConfiguration } from '@superfaceai/one-sdk/dist/internal/interpreter/http';
 
 // TODO: replace with exposed implementatoin, once refactored https://github.com/superfaceai/one-sdk-js/pull/225
 export function resolveSecurityConfiguration(
   schemes: SecurityScheme[],
   values: SecurityValues[],
-  providerName: string
+  providerName: string,
 ): SecurityConfiguration[] {
   const result: SecurityConfiguration[] = [];
 
@@ -32,22 +32,22 @@ export function resolveSecurityConfiguration(
     const invalidSchemeValuesErrorBuilder = (
       scheme: SecurityScheme,
       values: SecurityValues,
-      requiredKeys: [string, ...string[]]
+      requiredKeys: [string, ...string[]],
     ) => {
-      const valueKeys = Object.keys(values).filter((k) => k !== "id");
+      const valueKeys = Object.keys(values).filter((k) => k !== 'id');
 
       return invalidSecurityValuesError(
         providerName,
         scheme.type,
         scheme.id,
         valueKeys,
-        requiredKeys
+        requiredKeys,
       );
     };
 
     if (scheme.type === SecurityType.APIKEY) {
       if (!isApiKeySecurityValues(vals)) {
-        throw invalidSchemeValuesErrorBuilder(scheme, vals, ["apikey"]);
+        throw invalidSchemeValuesErrorBuilder(scheme, vals, ['apikey']);
       }
 
       result.push({
@@ -59,8 +59,8 @@ export function resolveSecurityConfiguration(
         case HttpScheme.BASIC:
           if (!isBasicAuthSecurityValues(vals)) {
             throw invalidSchemeValuesErrorBuilder(scheme, vals, [
-              "username",
-              "password",
+              'username',
+              'password',
             ]);
           }
 
@@ -72,7 +72,7 @@ export function resolveSecurityConfiguration(
 
         case HttpScheme.BEARER:
           if (!isBearerTokenSecurityValues(vals)) {
-            throw invalidSchemeValuesErrorBuilder(scheme, vals, ["token"]);
+            throw invalidSchemeValuesErrorBuilder(scheme, vals, ['token']);
           }
 
           result.push({
@@ -83,7 +83,7 @@ export function resolveSecurityConfiguration(
 
         case HttpScheme.DIGEST:
           if (!isDigestSecurityValues(vals)) {
-            throw invalidSchemeValuesErrorBuilder(scheme, vals, ["digest"]);
+            throw invalidSchemeValuesErrorBuilder(scheme, vals, ['digest']);
           }
 
           result.push({
