@@ -15,10 +15,10 @@ import {
 import { NonPrimitive } from '@superfaceai/one-sdk/dist/internal/interpreter/variables';
 import { ServiceSelector } from '@superfaceai/one-sdk/dist/lib/services';
 import { parseMap, parseProfile, Source } from '@superfaceai/parser';
-import { parseEnv, resolveEnvRecord } from './env';
-import { resolveSecurityConfiguration } from './security';
 import createDebug from 'debug';
 import { DEBUG_PREFIX } from './constants';
+import { parseEnv, resolveEnvRecord } from './env';
+import { resolveSecurityConfiguration } from './security';
 
 const debug = createDebug(`${DEBUG_PREFIX}:index`);
 
