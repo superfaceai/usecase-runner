@@ -63,5 +63,6 @@ export function resolveEnvRecord<T extends Record<string, unknown>>(
 }
 
 export function parseEnv(env: string): DotenvParseOutput {
+  // TODO: wrap to ParseError
   return parseDotenv(env);
 }

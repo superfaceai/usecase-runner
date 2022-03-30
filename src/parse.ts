@@ -3,8 +3,10 @@ import {
   assertProviderJson,
   ProfileDocumentNode,
   MapDocumentNode,
+  AssertionError,
 } from '@superfaceai/ast';
-import Parser, { Source } from '@superfaceai/parser';
+import Parser, { Source, SyntaxError } from '@superfaceai/parser';
+import { ParseError } from './errors';
 
 export async function parseProfile(
   profile: string,
@@ -12,7 +14,11 @@ export async function parseProfile(
   try {
     return await Parser.parseProfile(new Source(profile));
   } catch (err) {
-    throw err; // TODO: wrap to own error
+    if (err instanceof SyntaxError) {
+      throw ParseError.fromSyntaxError(err);
+    }
+
+    throw err;
   }
 }
 
@@ -20,7 +26,11 @@ export async function parseMap(map: string): Promise<MapDocumentNode> {
   try {
     return await Parser.parseMap(new Source(map));
   } catch (err) {
-    throw err; // TODO: wrap to own error
+    if (err instanceof SyntaxError) {
+      throw ParseError.fromSyntaxError(err);
+    }
+
+    throw err;
   }
 }
 
@@ -29,6 +39,10 @@ export async function parseProvider(provider: string): Promise<ProviderJson> {
     const providerJson: ProviderJson = JSON.parse(provider);
     return assertProviderJson(providerJson);
   } catch (err) {
-    throw err; // TODO: wrap to own error
+    if (err instanceof AssertionError) {
+      throw ParseError.fromAssertionError(err);
+    }
+
+    throw err;
   }
 }

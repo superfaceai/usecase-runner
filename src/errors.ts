@@ -1,3 +1,6 @@
+import { AssertionError } from '@superfaceai/ast';
+import { SyntaxError } from '@superfaceai/parser';
+
 export abstract class BaseError extends Error {
   constructor(
     private shortMessage: string,
@@ -58,5 +61,26 @@ export class MissingEnvVariableError extends BaseError {
 
     // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
     Object.setPrototypeOf(this, MissingEnvVariableError.prototype);
+  }
+}
+
+export class ParseError extends BaseError {
+  constructor(shortMessage: string, longLines: string[], hints: string[]) {
+    super(shortMessage, longLines, hints);
+
+    // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
+    Object.setPrototypeOf(this, MissingEnvVariableError.prototype);
+  }
+
+  static fromSyntaxError(err: SyntaxError): ParseError {
+    return new ParseError(
+      err.message,
+      [err.formatVisualization()],
+      [err.formatHints()],
+    );
+  }
+
+  static fromAssertionError(err: AssertionError): ParseError {
+    return new ParseError(err.message, err.path, []);
   }
 }

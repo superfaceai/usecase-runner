@@ -80,9 +80,17 @@ export async function perform({
   env,
 }: PerformOpts) {
   // Parse profile and map sources,
-  const profileAst = await parseProfile(profile); // TODO: Wrap to error to properly report
-  const mapAst = await parseMap(map); // TODO: Wrap to error to properly report
-  const providerJson = await parseProvider(provider); // TODO: Wrap to error to properly report and validate provider against schema
+  let profileAst: ProfileDocumentNode;
+  let mapAst: MapDocumentNode;
+  let providerJson: ProviderJson;
+
+  try {
+    profileAst = await parseProfile(profile);
+    mapAst = await parseMap(map);
+    providerJson = await parseProvider(provider);
+  } catch (err) {
+    throw err;
+  }
 
   const security = prepareSecurityValues(
     providerJson.name,
