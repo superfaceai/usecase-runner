@@ -1,6 +1,6 @@
 {
   "name": "@superfaceai/usecase-runner",
-  "version": "0.0.0",
+  "version": "1.0.0-pre.0",
   "description": "Perform use-cases directly from files without full Superface Lifecycle",
   "repository": "https://github.com/superfaceai/usecase-runner",
   "author": "Superface Team <hello@superface.ai>",
