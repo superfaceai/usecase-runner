@@ -69,7 +69,7 @@ export class ParseError extends BaseError {
     super(shortMessage, longLines, hints);
 
     // https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
-    Object.setPrototypeOf(this, MissingEnvVariableError.prototype);
+    Object.setPrototypeOf(this, ParseError.prototype);
   }
 
   static fromSyntaxError(err: SyntaxError): ParseError {

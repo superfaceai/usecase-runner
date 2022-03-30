@@ -5,7 +5,8 @@ import {
   MapDocumentNode,
   AssertionError,
 } from '@superfaceai/ast';
-import Parser, { Source, SyntaxError } from '@superfaceai/parser';
+import * as Parser from '@superfaceai/parser';
+import { Source, SyntaxError } from '@superfaceai/parser';
 import { ParseError } from './errors';
 
 export async function parseProfile(
